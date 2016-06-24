@@ -55,6 +55,7 @@ public class FlipperActivity extends AppCompatActivity implements SensorEventLis
 
         if(Mode){
 
+            Log.d("MODE", "Inside mode");
             flipNext();
 
             timer = (TextView) findViewById(R.id.timer);
@@ -64,6 +65,7 @@ public class FlipperActivity extends AppCompatActivity implements SensorEventLis
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
             maxRange = sensor.getMaximumRange();
+            Log.d("MaxRange", "" + maxRange);
 
             relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
@@ -133,7 +135,7 @@ public class FlipperActivity extends AppCompatActivity implements SensorEventLis
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(event.values[0]==0)
+        if(event.values[0]<=50)
             if(mode)
                 flipNext();
             else
