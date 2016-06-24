@@ -1,6 +1,7 @@
 package com.example.vishnu.slideshow;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,12 +34,16 @@ import java.util.Timer;
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE = 1;
+    public static final String MODE = "MODE";
     ImageView imageView;
     static MediaPlayer mediaPlayer;
     Button button;
     Spinner spinner;
     Thread player;
+    Button enable;
+    Button disable;
 
+    boolean mode = true;
     boolean state=false;
 
     @Override
@@ -52,15 +57,85 @@ public class MainActivity extends AppCompatActivity {
 
         imageView.setImageResource(R.drawable.image_1);
 
+        enable = (Button) findViewById(R.id.enable);
+        disable = (Button) findViewById(R.id.disable);
+
+        enable.setClickable(false);
+        enable.setBackgroundColor(Color.YELLOW);
+        enable.setTextColor(Color.BLACK);
+
+        disable.setClickable(true);
+        disable.setBackgroundColor(Color.BLACK);
+        disable.setTextColor(Color.YELLOW);
+
+        enable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(enable.isClickable()){
+
+                    mode = true;
+
+                    enable.setBackgroundColor(Color.YELLOW);
+                    enable.setTextColor(Color.BLACK);
+                    enable.setClickable(false);
+
+                    disable.setBackgroundColor(Color.BLACK);
+                    disable.setTextColor(Color.YELLOW);
+                    disable.setClickable(true);
+
+                    Toast.makeText(MainActivity.this,
+                            "Proximity Sensor Activated",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                else
+                {
+                    Toast.makeText(MainActivity.this,
+                            "Proximity Sensor is already Activated",
+                            Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+        disable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(disable.isClickable()){
+
+                    mode = false;
+
+                    disable.setBackgroundColor(Color.YELLOW);
+                    disable.setTextColor(Color.BLACK);
+                    disable.setClickable(false);
+
+                    enable.setBackgroundColor(Color.BLACK);
+                    enable.setTextColor(Color.YELLOW);
+                    enable.setClickable(true);
+
+                    Toast.makeText(MainActivity.this,
+                            "Proximity Sensor Deactivated",
+                            Toast.LENGTH_SHORT).show();
+
+                }
+
+                else{
+                    Toast.makeText(MainActivity.this,
+                            "Proximity Sensor is already Deactivated",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         mediaPlayer = MediaPlayer.create(this, R.raw.vivalavida);
 
         button = (Button) findViewById(R.id.play);
 
         spinner = (Spinner) findViewById(R.id.spinner);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.songs, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.songs, R.layout.my_spinner_item);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.my_spinner_item);
 
         spinner.setAdapter(adapter);
 
@@ -175,9 +250,12 @@ public class MainActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if(!state)
             play(view);
+
+        intent.putExtra(MODE, mode);
         startActivityForResult(intent, REQUEST_CODE);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
     }
+
 
 }

@@ -11,7 +11,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.vishnu.slideshow.MainActivity"
     tools:showIn="@layout/activity_main"
-    android:id="@+id/relativeLayout">
+    android:id="@+id/relativeLayout"
+    android:background="#780dca">
 
     <Button
         android:layout_width="wrap_content"
@@ -22,8 +23,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="42dp"
         android:clickable="false"
-        android:visibility="invisible"/>
-
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
         android:id="@+id/disable"
         android:layout_alignTop="@+id/enable"
         android:layout_alignEnd="@+id/linearLayout1"
-        android:visibility="invisible"/>
+        />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -48,15 +48,18 @@
             android:text="Slideshow"
             android:id="@+id/slideshow"
             android:padding="@dimen/activity_horizontal_margin"
-            android:onClick="slideshow"/>
-
+            android:onClick="slideshow"
+            android:background="#44A8BB"
+            android:textColor="#FFFFFF"
+        />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/play"
             android:background="@mipmap/ic_play"
             android:padding="@dimen/activity_horizontal_margin"
-            android:onClick="play" />
+            android:onClick="play"
+             />
 
 
     </LinearLayout>
@@ -89,7 +92,12 @@
             android:layout_height="0dp"
             android:id="@+id/spinner"
             android:layout_weight="7"
-            android:padding="@dimen/activity_vertical_margin"/>
+            android:padding="@dimen/activity_vertical_margin"
+            android:backgroundTint="#f70a0a"
+            android:backgroundTintMode="screen"
+            android:foregroundTintMode="src_over"
+            android:popupBackground="#fb022b"
+            android:foregroundTint="#fa1e1e" />
     </LinearLayout>
 
 
