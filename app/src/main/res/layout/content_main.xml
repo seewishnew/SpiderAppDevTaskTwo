@@ -81,6 +81,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="20"
             android:adjustViewBounds="true"
+            android:padding="@dimen/activity_vertical_margin"
             />
 
         <Spinner
