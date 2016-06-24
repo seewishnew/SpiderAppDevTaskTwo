@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Slideshow</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="songs">
+        <item>Viva la vida</item>
+        <item>Speed of sound</item>
+        <item>God put a smile upon your face</item>
+    </string-array>
+</resources>
