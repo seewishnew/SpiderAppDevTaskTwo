@@ -35,15 +35,31 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE = 1;
     public static final String MODE = "MODE";
+
+
     ImageView imageView;
+
+    /*MediaPlayer instance for the song*/
     static MediaPlayer mediaPlayer;
+    /*Play/pause button*/
     Button button;
+
+    /*To choose the soundtrack*/
     Spinner spinner;
+
+    /*To play music*/
     Thread player;
+
+    /*To enable or disable the sensor*/
     Button enable;
     Button disable;
 
+    /*To pass on to the next activity with
+    * info about whether the user wants to
+    * use the sensor or not*/
     boolean mode = true;
+    /*Tracker Variable that keeps track of
+    * whether the music is playing or not*/
     boolean state=false;
 
     @Override
@@ -57,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         imageView.setImageResource(R.drawable.image_1);
 
+        /*Getting the handles for the buttons*/
         enable = (Button) findViewById(R.id.enable);
         disable = (Button) findViewById(R.id.disable);
 
@@ -68,117 +85,112 @@ public class MainActivity extends AppCompatActivity {
         disable.setBackgroundColor(Color.BLACK);
         disable.setTextColor(Color.YELLOW);
 
-        enable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(enable.isClickable()){
+        /*Gives toggle functionality to the buttons*/{
+            enable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (enable.isClickable()) {
 
-                    mode = true;
+                        mode = true;
 
-                    enable.setBackgroundColor(Color.YELLOW);
-                    enable.setTextColor(Color.BLACK);
-                    enable.setClickable(false);
+                        enable.setBackgroundColor(Color.YELLOW);
+                        enable.setTextColor(Color.BLACK);
+                        enable.setClickable(false);
 
-                    disable.setBackgroundColor(Color.BLACK);
-                    disable.setTextColor(Color.YELLOW);
-                    disable.setClickable(true);
+                        disable.setBackgroundColor(Color.BLACK);
+                        disable.setTextColor(Color.YELLOW);
+                        disable.setClickable(true);
 
-                    Toast.makeText(MainActivity.this,
-                            "Proximity Sensor Activated",
-                            Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,
+                                "Proximity Sensor Activated",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this,
+                                "Proximity Sensor is already Activated",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
                 }
+            });
 
-                else
-                {
-                    Toast.makeText(MainActivity.this,
-                            "Proximity Sensor is already Activated",
-                            Toast.LENGTH_SHORT).show();
+            disable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (disable.isClickable()) {
 
+                        mode = false;
+
+                        disable.setBackgroundColor(Color.YELLOW);
+                        disable.setTextColor(Color.BLACK);
+                        disable.setClickable(false);
+
+                        enable.setBackgroundColor(Color.BLACK);
+                        enable.setTextColor(Color.YELLOW);
+                        enable.setClickable(true);
+
+                        Toast.makeText(MainActivity.this,
+                                "Proximity Sensor Deactivated",
+                                Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(MainActivity.this,
+                                "Proximity Sensor is already Deactivated",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
 
-        disable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(disable.isClickable()){
+        }
 
-                    mode = false;
-
-                    disable.setBackgroundColor(Color.YELLOW);
-                    disable.setTextColor(Color.BLACK);
-                    disable.setClickable(false);
-
-                    enable.setBackgroundColor(Color.BLACK);
-                    enable.setTextColor(Color.YELLOW);
-                    enable.setClickable(true);
-
-                    Toast.makeText(MainActivity.this,
-                            "Proximity Sensor Deactivated",
-                            Toast.LENGTH_SHORT).show();
-
-                }
-
-                else{
-                    Toast.makeText(MainActivity.this,
-                            "Proximity Sensor is already Deactivated",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         mediaPlayer = MediaPlayer.create(this, R.raw.vivalavida);
 
         button = (Button) findViewById(R.id.play);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
+        /*Takes care of soundtrack selection from spinner and handles interruptions caused by
+        * selecting a second soundtrack while one is already playing*/{
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.songs, R.layout.my_spinner_item);
+            spinner = (Spinner) findViewById(R.id.spinner);
 
-        adapter.setDropDownViewResource(R.layout.my_spinner_item);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.songs, R.layout.my_spinner_item);
 
-        spinner.setAdapter(adapter);
+            adapter.setDropDownViewResource(R.layout.my_spinner_item);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            spinner.setAdapter(adapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 
+                    if (state) {
+                        state = false;
+                        button.setBackgroundResource(R.mipmap.ic_play);
+                        mediaPlayer.release();
 
-                if(state){
-                    state = false;
-                    button.setBackgroundResource(R.mipmap.ic_play);
-                    mediaPlayer.release();
+                    }
+
+                    if (position == 0) {
+                        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.vivalavida);
+                    } else if (position == 1) {
+                        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.speedofsound);
+                    } else if (position == 2) {
+                        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.godputasmile);
+                    }
+
 
                 }
 
-                if(position==0)
-                {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
                     mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.vivalavida);
+
+
                 }
+            });
 
-                else if(position==1)
-                {
-                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.speedofsound);
-                }
-
-                else if(position ==2){
-                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.godputasmile);
-                }
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.vivalavida);
-
-
-            }
-        });
-
-
+        }
 
 
     }
@@ -214,28 +226,37 @@ public class MainActivity extends AppCompatActivity {
 
     public void play(View view) {
 
+        //if it is not playing, i.e, user wants to play or resume a song
         if(!state)
         {
+            //set state to true
             state = true;
+
+            //start playing the song on a separate thread
             player = new Thread(){
                 @Override
                 public void run(){
+
+                    //keep playing the music as long as the state is true
                     while(state) {
                         mediaPlayer.start();
                     }
-
+                    //when state becomes false, it comes out of the loop and pauses music
                     mediaPlayer.pause();
                 }
             };
-
+            //start the thread
             player.start();
-
+            //Set the button image to pause
             button.setBackgroundResource(R.mipmap.ic_pause);
         }
 
+        //if music is already playing, then user wants to pause
         else{
-
+            //As thread is already executing, setting state to false will make it come out of the
+            //loop and pause the music
             state = false;
+            //Set the button image to play
             button.setBackgroundResource(R.mipmap.ic_play);
         }
 
@@ -248,11 +269,19 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, FlipperActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+        //if music is not playing, start playing it!
         if(!state)
             play(view);
 
+        //Pass the value of mode to the next Activity
         intent.putExtra(MODE, mode);
+
+        //To come back to this activity after execution
         startActivityForResult(intent, REQUEST_CODE);
+
+        //Overriding default animation and replacing it with custom
+        //fade in and out transition.
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
     }
